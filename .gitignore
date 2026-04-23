@@ -1,0 +1,103 @@
+#########################################################
+# 🧠 GENERAL
+#########################################################
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+.vscode/
+.idea/
+
+#########################################################
+# 🔐 ENV / SECRETS
+#########################################################
+.env
+.env.*
+*.env
+
+#########################################################
+# 🐍 PYTHON (FASTAPI BACKEND)
+#########################################################
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Python build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy / type check
+.mypy_cache/
+.dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+#########################################################
+# 🧪 FASTAPI / BACKEND SPECIFIC
+#########################################################
+# Uploaded files (if any)
+uploads/
+temp/
+*.db
+
+# Chroma DB / Vector DB
+chroma_db/
+*.sqlite3
+
+#########################################################
+# ⚛️ NODE / REACT / VITE (FRONTEND)
+#########################################################
+node_modules/
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite cache
+.vite/
+
+#########################################################
+# ⚙️ PACKAGE MANAGERS
+#########################################################
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+#########################################################
+# 🧰 OS / EDITOR
+#########################################################
+*.sublime-project
+*.sublime-workspace
+
+#########################################################
+# 🚀 DEPLOYMENT (OPTIONAL)
+#########################################################
+.render
+.vercel
+.netlify
+
+#########################################################
+# 📦 MISC
+#########################################################
+coverage/
+.cache/
