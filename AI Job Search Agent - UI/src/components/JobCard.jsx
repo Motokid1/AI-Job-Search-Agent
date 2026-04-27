@@ -82,7 +82,14 @@ function JobCard({ job, onAnalyzeJob }) {
         <button
           type="button"
           className="success-btn"
-          onClick={() => onAnalyzeJob(job)}
+          onClick={() => {
+            console.log("Analyze clicked:", job);
+            if (onAnalyzeJob) {
+              onAnalyzeJob(job);
+            } else {
+              console.error("onAnalyzeJob is missing");
+            }
+          }}
         >
           Analyze Resume for This Job
         </button>

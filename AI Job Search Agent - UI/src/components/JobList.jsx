@@ -1,6 +1,6 @@
 import JobCard from "./JobCard";
 
-function JobList({ jobs }) {
+function JobList({ jobs, onAnalyzeJob }) {
   return (
     <section className="jobs-panel">
       <div className="jobs-header">
@@ -15,7 +15,11 @@ function JobList({ jobs }) {
       ) : (
         <div className="jobs-list">
           {jobs.map((job, index) => (
-            <JobCard key={`${job.source_url}-${index}`} job={job} />
+            <JobCard
+              key={`${job.source_url}-${index}`}
+              job={job}
+              onAnalyzeJob={onAnalyzeJob}
+            />
           ))}
         </div>
       )}

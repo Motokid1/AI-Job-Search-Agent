@@ -79,6 +79,7 @@ function App() {
   };
 
   const handleOpenJobMatch = (job) => {
+    console.log("Opening job match modal:", job);
     setSelectedJob(job);
     setJobMatchOpen(true);
   };
