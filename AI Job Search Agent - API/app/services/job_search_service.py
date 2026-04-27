@@ -158,7 +158,7 @@ def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
     # -----------------------------
     jobs: List[JobPosting] = []
     crawled_count = 0
-    MAX_JOBS = 5
+    MAX_JOBS = 2
 
     for url, result in aggregated_results.items():
         if len(jobs) >= MAX_JOBS:
