@@ -1,18 +1,18 @@
 function renderList(items) {
-  if (!items || items.length === 0) {
-    return "Not provided";
-  }
+  if (!items || items.length === 0) return "Not provided";
   return items.join(", ");
 }
 
 function ProfileSummary({ profile, totalFound }) {
   return (
     <aside className="summary-card">
-      <h3>Profile Summary</h3>
+      <h3>Candidate profile</h3>
+
       <div className="summary-item">
-        <span>Desired Role</span>
+        <span>Target role</span>
         <strong>{profile.desired_role || "Not provided"}</strong>
       </div>
+
       <div className="summary-item">
         <span>Experience</span>
         <strong>
@@ -22,33 +22,39 @@ function ProfileSummary({ profile, totalFound }) {
             : "Not provided"}
         </strong>
       </div>
+
       <div className="summary-item">
         <span>Location</span>
         <strong>{profile.location || "Not provided"}</strong>
       </div>
+
       <div className="summary-item">
         <span>Skills</span>
         <strong>{renderList(profile.skills)}</strong>
       </div>
+
       <div className="summary-item">
         <span>Certifications</span>
         <strong>{renderList(profile.certifications)}</strong>
       </div>
+
       <div className="summary-item">
-        <span>Preferred Companies</span>
+        <span>Preferred companies</span>
         <strong>{renderList(profile.companies)}</strong>
       </div>
+
       <div className="summary-item">
-        <span>Expected Package</span>
+        <span>Expected package</span>
         <strong>
           {profile.package_min_lpa || profile.package_max_lpa
             ? `${profile.package_min_lpa || "-"} - ${profile.package_max_lpa || "-"} LPA`
             : "Not provided"}
         </strong>
       </div>
-      <div className="summary-item">
-        <span>Total Jobs Found</span>
+
+      <div className="summary-stat">
         <strong>{totalFound}</strong>
+        <span>Recommended roles</span>
       </div>
     </aside>
   );

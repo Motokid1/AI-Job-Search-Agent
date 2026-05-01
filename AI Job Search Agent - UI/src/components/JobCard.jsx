@@ -3,22 +3,24 @@ function JobCard({ job, onAnalyzeJob }) {
     <article className="job-card">
       <div className="job-card-top">
         <div>
+          <p className="job-company">
+            {job.company || "Company not specified"}
+          </p>
           <h3>{job.title}</h3>
-          <p className="job-company">{job.company}</p>
         </div>
-        <div className="score-badge">{job.match_score}% Match</div>
+        <div className="score-badge">{job.match_score}%</div>
       </div>
 
       <div className="job-meta">
-        <span>📍 {job.location || "Location not specified"}</span>
-        <span>💰 {job.salary || "Salary not specified"}</span>
-        <span>🧠 {job.experience_text || "Experience not specified"}</span>
+        <span>{job.location || "Location not specified"}</span>
+        <span>{job.salary || "Salary not specified"}</span>
+        <span>{job.experience_text || "Experience not specified"}</span>
       </div>
 
       <p className="job-summary">{job.summary || "No summary available."}</p>
 
       <div className="tag-block">
-        <h4>Required Skills</h4>
+        <h4>Required skills</h4>
         <div className="tag-list">
           {job.required_skills?.length ? (
             job.required_skills.map((skill, index) => (
@@ -33,7 +35,7 @@ function JobCard({ job, onAnalyzeJob }) {
       </div>
 
       <div className="tag-block">
-        <h4>Match Reasons</h4>
+        <h4>Why this matches</h4>
         {job.match_reasons?.length ? (
           <ul className="bullet-list">
             {job.match_reasons.map((reason, index) => (
@@ -45,21 +47,6 @@ function JobCard({ job, onAnalyzeJob }) {
         )}
       </div>
 
-      <div className="tag-block">
-        <h4>Missing Skills</h4>
-        <div className="tag-list">
-          {job.missing_skills?.length ? (
-            job.missing_skills.map((skill, index) => (
-              <span key={`${skill}-${index}`} className="tag missing">
-                {skill}
-              </span>
-            ))
-          ) : (
-            <span className="muted">No major missing skills detected</span>
-          )}
-        </div>
-      </div>
-
       <div className="job-actions">
         <a
           className="primary-btn link-btn"
@@ -67,7 +54,7 @@ function JobCard({ job, onAnalyzeJob }) {
           target="_blank"
           rel="noreferrer"
         >
-          Apply / View Job
+          View role
         </a>
 
         <a
@@ -82,16 +69,9 @@ function JobCard({ job, onAnalyzeJob }) {
         <button
           type="button"
           className="success-btn"
-          onClick={() => {
-            console.log("Analyze clicked:", job);
-            if (onAnalyzeJob) {
-              onAnalyzeJob(job);
-            } else {
-              console.error("onAnalyzeJob is missing");
-            }
-          }}
+          onClick={() => onAnalyzeJob?.(job)}
         >
-          Analyze Resume for This Job
+          Match my resume
         </button>
       </div>
     </article>

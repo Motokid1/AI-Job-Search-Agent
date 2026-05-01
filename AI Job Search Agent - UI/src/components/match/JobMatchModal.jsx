@@ -10,23 +10,25 @@ function JobMatchModal({ job, onClose }) {
       <div className="modal-card">
         <div className="modal-header">
           <div>
-            <h2>Job-Specific Resume Match</h2>
+            <span className="eyebrow">Job-specific resume match</span>
+            <h2>Evaluate your resume for this role</h2>
             <p className="modal-subtitle">
-              Analyze your resume for this exact job posting.
+              We will compare your resume against the selected job description
+              and generate a fit report.
             </p>
           </div>
 
           <button className="modal-close-btn" onClick={onClose}>
-            ✕
+            Close
           </button>
         </div>
 
         <div className="selected-job-card">
-          <h3>{job.title}</h3>
           <p className="job-company">{job.company}</p>
+          <h3>{job.title}</h3>
           <div className="job-meta">
-            <span>📍 {job.location || "Location not specified"}</span>
-            <span>💰 {job.salary || "Salary not specified"}</span>
+            <span>{job.location || "Location not specified"}</span>
+            <span>{job.salary || "Salary not specified"}</span>
           </div>
           <p className="job-summary">
             {job.summary || "No summary available."}

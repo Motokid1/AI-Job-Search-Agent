@@ -17,9 +17,7 @@ function JobMatchUploader({ job, onSuccess }) {
     try {
       setLoading(true);
       setError("");
-
       const data = await matchResumeForJob(file, job);
-      console.log("JOB MATCH RESPONSE:", data);
       onSuccess(data);
     } catch (err) {
       setError(err.message || "Job-specific analysis failed.");
@@ -30,15 +28,15 @@ function JobMatchUploader({ job, onSuccess }) {
 
   return (
     <div className="job-match-upload-section">
-      <h3>Upload Resume for This Job</h3>
+      <h3>Upload your resume</h3>
       <p className="muted">
-        We will fetch the full JD, compare it with your resume, and generate a
-        job-specific fit report.
+        The system will fetch the job description, compare it with your resume,
+        and return a role-specific fit score.
       </p>
 
       <form className="form-grid" onSubmit={handleSubmit}>
         <div className="form-group form-group-full">
-          <label>Resume (PDF/DOCX)</label>
+          <label>Resume file</label>
           <input
             type="file"
             accept=".pdf,.docx"
@@ -48,7 +46,7 @@ function JobMatchUploader({ job, onSuccess }) {
 
         <div className="form-actions form-group-full">
           <button type="submit" className="primary-btn" disabled={loading}>
-            {loading ? "Analyzing..." : "Match Resume for This Job"}
+            {loading ? "Analyzing..." : "Generate fit report"}
           </button>
         </div>
       </form>
