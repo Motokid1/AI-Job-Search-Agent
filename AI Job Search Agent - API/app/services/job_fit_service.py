@@ -91,28 +91,29 @@ def analyze_resume_against_job(
     )
 
     settings = get_settings()
-    add_documents(
-        [
-            Document(
-                page_content="\n".join(
-                    [
-                        f"Resume: {profile.summary}",
-                        f"Job: {detailed_job.title}",
-                        f"Company: {detailed_job.company}",
-                        f"Overall Match: {response.job_fit_summary.overall_match_score}",
-                        f"Strengths: {', '.join(response.strengths)}",
-                        f"Missing Skills: {', '.join(response.gaps.missing_skills)}",
-                        f"Recommendation: {response.final_recommendation}",
-                    ]
-                ),
-                metadata={
-                    "source_url": detailed_job.source_url,
-                    "job_title": detailed_job.title,
-                    "company": detailed_job.company,
-                },
-            )
-        ],
-        collection_name=settings.chroma_job_match_collection_name,
-    )
+    if settings.enable_chroma_writes:
+        add_documents(
+            [
+                Document(
+                    page_content="\n".join(
+                        [
+                            f"Resume: {profile.summary}",
+                            f"Job: {detailed_job.title}",
+                            f"Company: {detailed_job.company}",
+                            f"Overall Match: {response.job_fit_summary.overall_match_score}",
+                            f"Strengths: {', '.join(response.strengths)}",
+                            f"Missing Skills: {', '.join(response.gaps.missing_skills)}",
+                            f"Recommendation: {response.final_recommendation}",
+                        ]
+                    ),
+                    metadata={
+                        "source_url": detailed_job.source_url,
+                        "job_title": detailed_job.title,
+                        "company": detailed_job.company,
+                    },
+                )
+            ],
+            collection_name=settings.chroma_job_match_collection_name,
+        )
 
     return response

@@ -15,13 +15,11 @@ class Settings(BaseSettings):
     groq_api_key: str = Field(alias="GROQ_API_KEY")
     tavily_api_key: str = Field(alias="TAVILY_API_KEY")
 
-    #openai/gpt-oss-120b
     llm_model_name: str = Field(default="llama-3.3-70b-versatile", alias="LLM_MODEL_NAME")
     embedding_model_name: str = Field(
         default="sentence-transformers/all-MiniLM-L6-v2",
         alias="EMBEDDING_MODEL_NAME",
     )
-
 
     chroma_persist_directory: str = Field(default="./chroma_db", alias="CHROMA_PERSIST_DIRECTORY")
     chroma_collection_name: str = Field(default="jobs_collection", alias="CHROMA_COLLECTION_NAME")
@@ -38,17 +36,25 @@ class Settings(BaseSettings):
         alias="CHROMA_JOB_MATCH_COLLECTION_NAME",
     )
 
-    top_k_results: int = Field(default=10, alias="TOP_K_RESULTS")
-    tavily_max_results: int = Field(default=8, alias="TAVILY_MAX_RESULTS")
-    max_crawl_urls: int = Field(default=5, alias="MAX_CRAWL_URLS")
-    max_analysis_market_results: int = Field(default=6, alias="MAX_ANALYSIS_MARKET_RESULTS")
-    max_resource_results: int = Field(default=6, alias="MAX_RESOURCE_RESULTS")
+    top_k_results: int = Field(default=3, alias="TOP_K_RESULTS")
+    tavily_max_results: int = Field(default=3, alias="TAVILY_MAX_RESULTS")
+    max_crawl_urls: int = Field(default=1, alias="MAX_CRAWL_URLS")
+    max_analysis_market_results: int = Field(default=2, alias="MAX_ANALYSIS_MARKET_RESULTS")
+    max_resource_results: int = Field(default=2, alias="MAX_RESOURCE_RESULTS")
 
-    chunk_size: int = Field(default=1200, alias="CHUNK_SIZE")
-    chunk_overlap: int = Field(default=150, alias="CHUNK_OVERLAP")
+    max_search_results: int = Field(default=6, alias="MAX_SEARCH_RESULTS")
+    max_tavily_queries: int = Field(default=2, alias="MAX_TAVILY_QUERIES")
+    enable_job_crawling: bool = Field(default=False, alias="ENABLE_JOB_CRAWLING")
+    max_crawl_pages: int = Field(default=1, alias="MAX_CRAWL_PAGES")
+    max_content_chars: int = Field(default=6000, alias="MAX_CONTENT_CHARS")
+    llm_max_tokens: int = Field(default=900, alias="LLM_MAX_TOKENS")
+    enable_chroma_writes: bool = Field(default=False, alias="ENABLE_CHROMA_WRITES")
+
+    chunk_size: int = Field(default=800, alias="CHUNK_SIZE")
+    chunk_overlap: int = Field(default=80, alias="CHUNK_OVERLAP")
 
     allowed_origins_raw: str = Field(
-        default="http://localhost:5173,http://127.0.0.1:5173",
+        default="http://localhost:5173",
         alias="ALLOWED_ORIGINS",
     )
 

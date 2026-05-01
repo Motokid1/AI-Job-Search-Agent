@@ -127,13 +127,11 @@ def _build_documents_for_chroma(jobs: List[JobPosting]) -> List[Document]:
 def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
     settings = get_settings()
     queries = build_search_queries(profile)
+    queries = queries[: settings.max_tavily_queries]
 
     aggregated_results: Dict[str, Dict[str, Any]] = {}
     include_domains = None
 
-    # -----------------------------
-    # STEP 1: Tavily Search
-    # -----------------------------
     for query in queries:
         try:
             results = search_web(query=query, include_domains=include_domains)
@@ -153,27 +151,23 @@ def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
 
     logger.info("Collected %d unique search results", len(aggregated_results))
 
-    # -----------------------------
-    # STEP 2: Crawl + Extract Jobs
-    # -----------------------------
     jobs: List[JobPosting] = []
     crawled_count = 0
-    MAX_JOBS = 2
+    max_jobs = settings.max_search_results
 
     for url, result in aggregated_results.items():
-        if len(jobs) >= MAX_JOBS:
-            logger.info("Reached max job limit (%d), stopping further processing", MAX_JOBS)
+        if len(jobs) >= max_jobs:
+            logger.info("Reached max job limit (%d), stopping processing", max_jobs)
             break
 
         try:
             base_text = parse_search_result_content(result)
             enriched_text = base_text
 
-            if crawled_count < settings.max_crawl_urls:
+            if settings.enable_job_crawling and crawled_count < settings.max_crawl_pages:
                 instructions = (
-                    "Extract the page details for a job posting or career opportunity. "
-                    "Focus on role title, company, location, skills, salary, "
-                    "experience, and apply link. "
+                    "Extract job details like role title, company, location, skills, salary, "
+                    "experience and apply link. "
                     f"Candidate profile context: {profile.to_search_text()}"
                 )
 
@@ -185,6 +179,8 @@ def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
 
                 crawled_count += 1
 
+            enriched_text = truncate_text(enriched_text, max_chars=settings.max_content_chars)
+
             job = _extract_job_from_content(
                 profile=profile,
                 source_url=url,
@@ -192,7 +188,6 @@ def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
                 fallback_title=result.get("title", ""),
             )
 
-            # Fallback if LLM extraction fails
             if not job:
                 logger.info("Using fallback job builder for %s", url)
                 job = _build_fallback_job_from_result(result, profile)
@@ -200,26 +195,19 @@ def search_jobs_for_profile(profile: SearchProfile) -> SearchResponse:
             if job:
                 job = compute_match(job, profile)
                 jobs.append(job)
-                logger.info("Added job %d/%d: %s", len(jobs), MAX_JOBS, job.title)
+                logger.info("Added job %d/%d: %s", len(jobs), max_jobs, job.title)
 
         except Exception as exc:
             logger.warning("Failed to process result from %s: %s", url, exc)
             continue
 
-    if not jobs:
-        logger.warning("No jobs could be extracted after search/crawl stage")
-
-    # Optional Chroma store
-    if jobs:
+    if settings.enable_chroma_writes and jobs:
         try:
             add_job_documents(_build_documents_for_chroma(jobs))
         except Exception as exc:
             logger.warning("Failed to add job documents to Chroma: %s", exc)
 
-    # For now, return directly after compute_match
     jobs.sort(key=lambda item: item.match_score, reverse=True)
-
-    logger.info("Returning %d jobs directly to frontend", len(jobs))
 
     return SearchResponse(
         profile=profile,

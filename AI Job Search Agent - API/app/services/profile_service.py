@@ -1,6 +1,7 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 
+from app.core.config import get_settings
 from app.core.prompts import PROFILE_EXTRACTION_PROMPT
 from app.schemas.profile import ManualProfileInput, ResumeExtractedProfile, SearchProfile
 from app.services.llm_service import get_llm
@@ -9,8 +10,10 @@ from app.utils.text import clean_text, normalize_list, safe_json_loads, truncate
 
 
 def extract_profile_from_resume(filename: str, file_bytes: bytes) -> ResumeExtractedProfile:
+    settings = get_settings()
+
     raw_text = extract_text_from_resume(filename, file_bytes)
-    cleaned_text = truncate_text(clean_text(raw_text), max_chars=12000)
+    cleaned_text = truncate_text(clean_text(raw_text), max_chars=settings.max_content_chars)
 
     prompt = PromptTemplate.from_template(PROFILE_EXTRACTION_PROMPT)
     chain = prompt | get_llm() | StrOutputParser()
@@ -18,7 +21,7 @@ def extract_profile_from_resume(filename: str, file_bytes: bytes) -> ResumeExtra
 
     data = safe_json_loads(response_text)
 
-    profile = ResumeExtractedProfile(
+    return ResumeExtractedProfile(
         desired_role=data.get("desired_role"),
         skills=normalize_list(data.get("skills", [])),
         years_experience=data.get("years_experience"),
@@ -28,7 +31,6 @@ def extract_profile_from_resume(filename: str, file_bytes: bytes) -> ResumeExtra
         summary=data.get("summary", ""),
         raw_resume_text=cleaned_text,
     )
-    return profile
 
 
 def merge_resume_and_manual_profile(
