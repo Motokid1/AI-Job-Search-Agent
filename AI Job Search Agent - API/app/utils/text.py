@@ -16,14 +16,66 @@ def truncate_text(text: str, max_chars: int = 12000) -> str:
     return text[:max_chars]
 
 
-def safe_json_loads(text: str) -> Dict[str, Any]:
+def _extract_json_object(text: str) -> str:
     text = text.strip()
 
     if text.startswith("```"):
         text = text.strip("`")
         text = text.replace("json\n", "", 1).strip()
 
-    return json.loads(text)
+    start = text.find("{")
+    end = text.rfind("}")
+
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("No valid JSON object found in LLM response.")
+
+    return text[start : end + 1]
+
+
+def _escape_control_chars_inside_strings(text: str) -> str:
+    result = []
+    in_string = False
+    escape = False
+
+    for char in text:
+        if escape:
+            result.append(char)
+            escape = False
+            continue
+
+        if char == "\\":
+            result.append(char)
+            escape = True
+            continue
+
+        if char == '"':
+            result.append(char)
+            in_string = not in_string
+            continue
+
+        if in_string:
+            if char == "\n":
+                result.append("\\n")
+            elif char == "\r":
+                result.append("\\r")
+            elif char == "\t":
+                result.append("\\t")
+            else:
+                result.append(char)
+        else:
+            result.append(char)
+
+    return "".join(result)
+
+
+def safe_json_loads(text: str) -> Dict[str, Any]:
+    json_text = _extract_json_object(text)
+
+    try:
+        return json.loads(json_text)
+    except json.JSONDecodeError:
+        repaired = _escape_control_chars_inside_strings(json_text)
+        return json.loads(repaired)
 
 
 def normalize_list(values: Iterable[str]) -> List[str]:
