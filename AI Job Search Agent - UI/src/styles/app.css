@@ -44,6 +44,7 @@ a {
 /* Header */
 .topbar {
   background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   position: sticky;

@@ -20,3 +20,9 @@ pypdf
 python-docx
 
 numpy
+
+playwright
+langgraph
+
+python-multipart
+
