@@ -139,3 +139,120 @@ export async function matchResumeForJob(file, job) {
 
   return response.json();
 }
+
+export async function prepareApplicationPackage(file, job, preferences) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("job_payload", JSON.stringify(job));
+
+  if (preferences.coverLetterTone) {
+    formData.append("cover_letter_tone", preferences.coverLetterTone);
+  }
+  if (preferences.noticePeriod) {
+    formData.append("notice_period", preferences.noticePeriod);
+  }
+  if (preferences.expectedSalary) {
+    formData.append("expected_salary", preferences.expectedSalary);
+  }
+  if (preferences.currentLocation) {
+    formData.append("current_location", preferences.currentLocation);
+  }
+  if (preferences.willingToRelocate) {
+    formData.append("willing_to_relocate", preferences.willingToRelocate);
+  }
+  if (preferences.workAuthorization) {
+    formData.append("work_authorization", preferences.workAuthorization);
+  }
+  if (preferences.portfolioUrl) {
+    formData.append("portfolio_url", preferences.portfolioUrl);
+  }
+  if (preferences.githubUrl) {
+    formData.append("github_url", preferences.githubUrl);
+  }
+  if (preferences.linkedinUrl) {
+    formData.append("linkedin_url", preferences.linkedinUrl);
+  }
+
+  const response = await fetch(`${API_BASE_URL}/apply/prepare`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function createTrackedApplication(payload) {
+  const response = await fetch(`${API_BASE_URL}/tracker/applications`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function getTrackedApplications(params = {}) {
+  const query = new URLSearchParams();
+
+  if (params.status && params.status !== "All") {
+    query.append("status", params.status);
+  }
+
+  if (params.sortBy) {
+    query.append("sort_by", params.sortBy);
+  }
+
+  if (params.sortOrder) {
+    query.append("sort_order", params.sortOrder);
+  }
+
+  const url = `${API_BASE_URL}/tracker/applications${
+    query.toString() ? `?${query.toString()}` : ""
+  }`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function updateTrackedApplication(id, payload) {
+  const response = await fetch(`${API_BASE_URL}/tracker/applications/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function deleteTrackedApplication(id) {
+  const response = await fetch(`${API_BASE_URL}/tracker/applications/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}

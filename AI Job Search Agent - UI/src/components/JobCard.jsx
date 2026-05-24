@@ -1,4 +1,4 @@
-function JobCard({ job, onAnalyzeJob }) {
+function JobCard({ job, onAnalyzeJob, onPrepareApply, onSaveToTracker }) {
   return (
     <article className="job-card">
       <div className="job-card-top">
@@ -69,9 +69,31 @@ function JobCard({ job, onAnalyzeJob }) {
         <button
           type="button"
           className="success-btn"
-          onClick={() => onAnalyzeJob?.(job)}
+          onClick={() => {
+            console.log("Match resume clicked:", job);
+            onAnalyzeJob?.(job);
+          }}
         >
           Match my resume
+        </button>
+
+        <button
+          type="button"
+          className="apply-btn"
+          onClick={() => {
+            console.log("Prepare application clicked:", job);
+            onPrepareApply?.(job);
+          }}
+        >
+          Prepare application
+        </button>
+
+        <button
+          type="button"
+          className="tracker-btn"
+          onClick={() => onSaveToTracker?.(job)}
+        >
+          Save to tracker
         </button>
       </div>
     </article>

@@ -6,9 +6,15 @@ import JobList from "./components/JobList";
 import ProfileSummary from "./components/ProfileSummary";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
+
 import AnalysisForm from "./components/analysis/AnalysisForm";
 import AnalysisDashboard from "./components/analysis/AnalysisDashboard";
+
 import JobMatchModal from "./components/match/JobMatchModal";
+import AutoApplyModal from "./components/apply/AutoApplyModal";
+
+import TrackerDashboard from "./components/tracker/TrackerDashboard";
+import SaveToTrackerModal from "./components/tracker/SaveToTrackerModal";
 
 function App() {
   const [activePage, setActivePage] = useState("jobs");
@@ -22,8 +28,15 @@ function App() {
   const [totalFound, setTotalFound] = useState(0);
 
   const [analysisData, setAnalysisData] = useState(null);
+
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobMatchOpen, setJobMatchOpen] = useState(false);
+
+  const [applyJob, setApplyJob] = useState(null);
+  const [applyOpen, setApplyOpen] = useState(false);
+
+  const [trackerJob, setTrackerJob] = useState(null);
+  const [trackerOpen, setTrackerOpen] = useState(false);
 
   const resetJobResults = () => {
     setJobs([]);
@@ -74,6 +87,7 @@ function App() {
   };
 
   const handleOpenJobMatch = (job) => {
+    console.log("Opening job match modal:", job);
     setSelectedJob(job);
     setJobMatchOpen(true);
   };
@@ -81,6 +95,28 @@ function App() {
   const handleCloseJobMatch = () => {
     setSelectedJob(null);
     setJobMatchOpen(false);
+  };
+
+  const handleOpenApplyAssistant = (job) => {
+    console.log("Opening apply assistant:", job);
+    setApplyJob(job);
+    setApplyOpen(true);
+  };
+
+  const handleCloseApplyAssistant = () => {
+    setApplyJob(null);
+    setApplyOpen(false);
+  };
+
+  const handleOpenTracker = (job) => {
+    console.log("Opening tracker modal:", job);
+    setTrackerJob(job);
+    setTrackerOpen(true);
+  };
+
+  const handleCloseTracker = () => {
+    setTrackerJob(null);
+    setTrackerOpen(false);
   };
 
   return (
@@ -96,23 +132,9 @@ function App() {
                 <h1>Find better-fit jobs with intelligent resume matching.</h1>
                 <p>
                   Search relevant roles, compare your profile with job
-                  requirements, and evaluate your resume against specific job
-                  descriptions before applying.
+                  requirements, prepare application material, and track every
+                  job application.
                 </p>
-              </div>
-              <div className="hero-metrics">
-                <div>
-                  <strong>6</strong>
-                  <span>Curated results</span>
-                </div>
-                <div>
-                  <strong>AI</strong>
-                  <span>Resume matching</span>
-                </div>
-                <div>
-                  <strong>JD</strong>
-                  <span>Specific scoring</span>
-                </div>
               </div>
             </section>
 
@@ -125,12 +147,15 @@ function App() {
 
                 <div className="segmented-control">
                   <button
+                    type="button"
                     className={jobInputMode === "resume" ? "active" : ""}
                     onClick={() => setJobInputMode("resume")}
                   >
                     Resume
                   </button>
+
                   <button
+                    type="button"
                     className={jobInputMode === "manual" ? "active" : ""}
                     onClick={() => setJobInputMode("manual")}
                   >
@@ -164,7 +189,13 @@ function App() {
                 {profile && (
                   <ProfileSummary profile={profile} totalFound={totalFound} />
                 )}
-                <JobList jobs={jobs} onAnalyzeJob={handleOpenJobMatch} />
+
+                <JobList
+                  jobs={jobs}
+                  onAnalyzeJob={handleOpenJobMatch}
+                  onPrepareApply={handleOpenApplyAssistant}
+                  onSaveToTracker={handleOpenTracker}
+                />
               </section>
             )}
           </>
@@ -212,10 +243,35 @@ function App() {
             )}
           </>
         )}
+
+        {activePage === "tracker" && (
+          <>
+            <section className="hero-card product-hero">
+              <div>
+                <span className="eyebrow">Application management</span>
+                <h1>Track every job application in one place.</h1>
+                <p>
+                  Monitor saved jobs, applications, interviews, follow-ups,
+                  offers, and outcomes with a simple job search pipeline.
+                </p>
+              </div>
+            </section>
+
+            <TrackerDashboard />
+          </>
+        )}
       </main>
 
       {jobMatchOpen && selectedJob && (
         <JobMatchModal job={selectedJob} onClose={handleCloseJobMatch} />
+      )}
+
+      {applyOpen && applyJob && (
+        <AutoApplyModal job={applyJob} onClose={handleCloseApplyAssistant} />
+      )}
+
+      {trackerOpen && trackerJob && (
+        <SaveToTrackerModal job={trackerJob} onClose={handleCloseTracker} />
       )}
     </div>
   );

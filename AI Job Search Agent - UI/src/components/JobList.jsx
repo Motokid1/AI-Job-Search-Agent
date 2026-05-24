@@ -1,6 +1,6 @@
 import JobCard from "./JobCard";
 
-function JobList({ jobs, onAnalyzeJob }) {
+function JobList({ jobs, onAnalyzeJob, onPrepareApply, onSaveToTracker }) {
   return (
     <section className="jobs-panel">
       <div className="jobs-header">
@@ -24,6 +24,8 @@ function JobList({ jobs, onAnalyzeJob }) {
               key={`${job.source_url}-${index}`}
               job={job}
               onAnalyzeJob={onAnalyzeJob}
+              onPrepareApply={onPrepareApply}
+              onSaveToTracker={onSaveToTracker}
             />
           ))}
         </div>

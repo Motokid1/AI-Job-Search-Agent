@@ -27,6 +27,14 @@ function Header({ activePage, setActivePage }) {
           >
             Resume Analysis
           </button>
+          <button
+            className={
+              activePage === "tracker" ? "nav-link active" : "nav-link"
+            }
+            onClick={() => setActivePage("tracker")}
+          >
+            Tracker
+          </button>
         </nav>
       </div>
     </header>
