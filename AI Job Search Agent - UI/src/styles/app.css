@@ -815,3 +815,18 @@ a {
     grid-template-columns: 1fr;
   }
 }
+.auto-apply-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 800;
+  background: #ea580c;
+  color: white;
+}
+
+.auto-apply-btn:hover {
+  transform: translateY(-1px);
+}

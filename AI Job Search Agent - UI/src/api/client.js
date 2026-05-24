@@ -256,3 +256,66 @@ export async function deleteTrackedApplication(id) {
 
   return response.json();
 }
+export async function startAutoApplySession(file, job, candidate) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("job_payload", JSON.stringify(job));
+  formData.append("candidate_payload", JSON.stringify(candidate));
+
+  const response = await fetch(`${API_BASE_URL}/auto-apply/start`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function getAutoApplySession(sessionId) {
+  const response = await fetch(
+    `${API_BASE_URL}/auto-apply/session/${sessionId}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function resumeAutoApplySession(sessionId, decision) {
+  const response = await fetch(
+    `${API_BASE_URL}/auto-apply/session/${sessionId}/resume`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ decision }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}
+
+export async function cancelAutoApplySession(sessionId) {
+  const response = await fetch(
+    `${API_BASE_URL}/auto-apply/session/${sessionId}/cancel`,
+    {
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
+}

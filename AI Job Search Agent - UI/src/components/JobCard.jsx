@@ -1,4 +1,10 @@
-function JobCard({ job, onAnalyzeJob, onPrepareApply, onSaveToTracker }) {
+function JobCard({
+  job,
+  onAnalyzeJob,
+  onPrepareApply,
+  onSaveToTracker,
+  onRuntimeAutoApply,
+}) {
   return (
     <article className="job-card">
       <div className="job-card-top">
@@ -94,6 +100,13 @@ function JobCard({ job, onAnalyzeJob, onPrepareApply, onSaveToTracker }) {
           onClick={() => onSaveToTracker?.(job)}
         >
           Save to tracker
+        </button>
+        <button
+          type="button"
+          className="auto-apply-btn"
+          onClick={() => onRuntimeAutoApply?.(job)}
+        >
+          Auto apply
         </button>
       </div>
     </article>

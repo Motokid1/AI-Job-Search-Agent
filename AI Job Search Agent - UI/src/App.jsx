@@ -16,6 +16,8 @@ import AutoApplyModal from "./components/apply/AutoApplyModal";
 import TrackerDashboard from "./components/tracker/TrackerDashboard";
 import SaveToTrackerModal from "./components/tracker/SaveToTrackerModal";
 
+import AutoApplyRuntimeModal from "./components/autoapply/AutoApplyRuntimeModal";
+
 function App() {
   const [activePage, setActivePage] = useState("jobs");
   const [jobInputMode, setJobInputMode] = useState("resume");
@@ -37,6 +39,9 @@ function App() {
 
   const [trackerJob, setTrackerJob] = useState(null);
   const [trackerOpen, setTrackerOpen] = useState(false);
+
+  const [runtimeAutoApplyJob, setRuntimeAutoApplyJob] = useState(null);
+  const [runtimeAutoApplyOpen, setRuntimeAutoApplyOpen] = useState(false);
 
   const resetJobResults = () => {
     setJobs([]);
@@ -119,6 +124,16 @@ function App() {
     setTrackerOpen(false);
   };
 
+  const handleOpenRuntimeAutoApply = (job) => {
+    setRuntimeAutoApplyJob(job);
+    setRuntimeAutoApplyOpen(true);
+  };
+
+  const handleCloseRuntimeAutoApply = () => {
+    setRuntimeAutoApplyJob(null);
+    setRuntimeAutoApplyOpen(false);
+  };
+
   return (
     <div className="app-shell">
       <Header activePage={activePage} setActivePage={setActivePage} />
@@ -195,6 +210,7 @@ function App() {
                   onAnalyzeJob={handleOpenJobMatch}
                   onPrepareApply={handleOpenApplyAssistant}
                   onSaveToTracker={handleOpenTracker}
+                  onRuntimeAutoApply={handleOpenRuntimeAutoApply}
                 />
               </section>
             )}
@@ -272,6 +288,13 @@ function App() {
 
       {trackerOpen && trackerJob && (
         <SaveToTrackerModal job={trackerJob} onClose={handleCloseTracker} />
+      )}
+
+      {runtimeAutoApplyOpen && runtimeAutoApplyJob && (
+        <AutoApplyRuntimeModal
+          job={runtimeAutoApplyJob}
+          onClose={handleCloseRuntimeAutoApply}
+        />
       )}
     </div>
   );

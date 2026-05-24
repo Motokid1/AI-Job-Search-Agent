@@ -13,5 +13,20 @@
     "id": "5b53b2f9-00a9-4558-af67-4d3e8a1db9d5",
     "created_at": "2026-05-24 11:11:15.328671",
     "updated_at": "2026-05-24 11:11:15.328671"
+  },
+  {
+    "company": "Wells Fargo",
+    "role": "Software Engineer/JAVA, Backend, Spring Boot, Microservices & GEN AI",
+    "job_url": "https://www.wellsfargojobs.com/en/jobs/r-543625/software-engineer-java-backend-spring-boot-microservices-gen-ai",
+    "status": "Applied",
+    "applied_date": "2026-05-24",
+    "resume_version": null,
+    "notes": null,
+    "follow_up_date": null,
+    "recruiter_name": null,
+    "recruiter_contact": null,
+    "id": "28d29ae0-2d10-4891-8029-4313c7f875e2",
+    "created_at": "2026-05-24 14:22:04.281500",
+    "updated_at": "2026-05-24 14:22:04.281500"
   }
 ]
